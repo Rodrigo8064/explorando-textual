@@ -1,16 +1,15 @@
 from textual import on
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.containers import Vertical
 from textual.screen import Screen
 from textual.widgets import (
     Button,
-    Collapsible,
     Footer,
     Header,
     Label,
     ListItem,
     ListView,
-    RichLog,
+    Static,
 )
 
 OPTIONS_DATA: dict[str, list[str]] = {
@@ -45,10 +44,8 @@ class CategoryScreen(Screen):
         yield Button("voltar", classes="column", id="pop")
 
 
-class TUIInstaller(App):
+class TUIInstaller(Screen):
     """Protótipo de tela: seleção de pacotes/apps em categorias."""
-
-    CSS_PATH = "style.tcss"
 
     BINDINGS = [
         ("q", "quit", "Sair"),
@@ -61,6 +58,22 @@ class TUIInstaller(App):
 
         yield Footer()
 
+
+class AppTeste(App):
+    CSS_PATH = "style.tcss"
+
+    BINDINGS = [
+        ("q", "quit", "Sair"),
+    ]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Vertical(classes="conteiner"):
+            yield Static("Um", classes="column")
+            yield Static("dois", classes="column")
+            yield ListView(ListItem(Label("um")), ListItem(Label("dois")))
+        yield Footer()
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "pop":
             self.app.pop_screen()
@@ -71,9 +84,7 @@ class TUIInstaller(App):
             return
         itens = OPTIONS_DATA[categoria]
 
-        self.push_screen(CategoryScreen(categoria, itens))
-
 
 if __name__ == "__main__":
-    app = TUIInstaller()
+    app = AppTeste()
     app.run()
